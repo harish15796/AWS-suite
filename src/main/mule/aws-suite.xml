@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:s3="http://www.mulesoft.org/schema/mule/s3"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/s3 http://www.mulesoft.org/schema/mule/s3/current/mule-s3.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<flow name="aws-suiteFlow1" doc:id="3a5024e9-5854-4076-8779-cebe8bf7ff5e" >
+		<http:listener doc:name="Listener" doc:id="4ab19983-e446-4dd0-9b4c-1ec4595b5557" config-ref="HTTP_Listener_config" path="${http.path}"/>
+		<logger level="INFO" doc:name="Logger" doc:id="6ceecc81-43f3-46e5-a600-a71852e8d710" message='#[correlationId]------ " aws flow trigerred" #[payload]'/>
+		<s3:list-objects doc:name="List objects" doc:id="a98f6e6c-dcbd-40aa-942e-ea138b2fc22f" config-ref="Amazon_S3_Configuration" bucketName="harish-apisero"/>
+		<ee:transform doc:name="Transform Message" doc:id="02c2bcc0-24bc-474b-8dfe-9b96522eda3f" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="aws flow trigerred" doc:id="12fa2790-2e40-457f-ae7f-26de6c379715" message='#[correlationId]------ " aws flow trigerred" #[payload]'/>
+	</flow>
+</mule>
